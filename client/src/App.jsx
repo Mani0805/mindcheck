@@ -36,7 +36,7 @@ function App() {
 
         try {
             const response = await fetch(
-                "http://localhost:5000/api/news",
+  "https://mindcheck-o280.onrender.com/api/news",
                 {
                     method: "POST",
 
