@@ -120,77 +120,51 @@ setContent("");
     // FETCH HISTORY FROM MONGODB
     // ==========================================
 
-    const fetchHistory = async () => {
+    
+const fetchHistory = async () => {
+    setHistoryLoading(true);
 
-        setHistoryLoading(true);
+    try {
+        const response = await fetch(
+            "https://mindcheck-o280.onrender.com/api/news"
+        );
 
-        try {
+        const data = await response.json();
 
-            const response = await fetch(
-                "http://localhost:5000/api/news"
-            );
+        console.log("HISTORY RESPONSE:", data);
+        console.log("HISTORY RECORDS:", data.news);
 
-            const data = await response.json();
+        if (response.ok) {
+            const records = data.news || [];
 
-            console.log(
-                "HISTORY RESPONSE:",
-                data
-            );
+            setHistory(records);
+            setShowHistory(true);
 
-            console.log(
-                "HISTORY RECORDS:",
-                data.news
-            );
-
-            if (response.ok) {
-
-                const records =
-                    data.news || [];
-
-                setHistory(records);
-
-                setShowHistory(true);
-
-                // Scroll to history section
-                setTimeout(() => {
-
-                    document
-                        .getElementById("history")
-                        ?.scrollIntoView({
-                            behavior: "smooth",
-                        });
-
-                }, 100);
-
-            } else {
-
-                console.error(
-                    "History API error:",
-                    data.message
-                );
-
-                setMessage(
-                    data.message ||
-                    "Unable to load history."
-                );
-            }
-
-        } catch (error) {
-
-            console.error(
-                "History error:",
-                error
-            );
+            // Scroll to history section
+            setTimeout(() => {
+                document
+                    .getElementById("history")
+                    ?.scrollIntoView({
+                        behavior: "smooth",
+                    });
+            }, 100);
+        } else {
+            console.error("History API error:", data.message);
 
             setMessage(
-                "Unable to connect to the history API."
+                data.message || "Unable to load history."
             );
-
-        } finally {
-
-            setHistoryLoading(false);
         }
-    };
+    } catch (error) {
+        console.error("History error:", error);
+
+        setMessage(
+            "Unable to connect to the history API."
+        );
+    } finally {
+        setHistoryLoading(false);
+    }
+};
 
 
     // ==========================================
